@@ -9,10 +9,12 @@ import { formatPhone, toE164 } from '@/lib/phone'
 import { dateTime, timeAgo } from '@/lib/format'
 import LeadFields, { type LeadDraft } from '@/components/LeadFields'
 import Conversation from '@/components/Conversation'
-import AiTextArea from '@/components/AiTextArea'
+import LeadNotes from '@/components/LeadNotes'
+import LeadFollowups from '@/components/LeadFollowups'
+import LeadHistory from '@/components/LeadHistory'
 import { StatusBadge, TypeBadge } from '@/components/Badges'
 
-const EDITABLE_EXCLUDE = new Set(['id', 'created_at', 'updated_at', 'short_code', 'raw_payload', 'unread_messages', 'last_message_at', 'last_inbound_at'])
+const EDITABLE_EXCLUDE = new Set(['notes', 'id', 'created_at', 'updated_at', 'short_code', 'raw_payload', 'unread_messages', 'last_message_at', 'last_inbound_at'])
 
 export default function LeadPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
@@ -119,6 +121,8 @@ export default function LeadPage({ params }: { params: Promise<{ id: string }> }
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         <div className="lg:col-span-2 space-y-5">
           <Conversation lead={lead} onChanged={load} />
+          <LeadNotes leadId={lead.id} onChanged={load} />
+          <h2 className="h2 pt-2">Lead details</h2>
           <LeadFields lead={draft} onChange={edit} />
           <div className="sticky bottom-0 py-3 bg-canvas/90 backdrop-blur flex gap-2">
             <button className="btn-primary" disabled={!dirty || saving} onClick={saveAll}>{saving ? 'Saving...' : dirty ? 'Save changes' : 'All changes saved'}</button>
@@ -149,10 +153,6 @@ export default function LeadPage({ params }: { params: Promise<{ id: string }> }
                 ))}
               </div>
             </div>
-            <div>
-              <label className="label">Notes</label>
-              <NotesBox value={lead.notes ?? ''} onSave={(v) => patch({ notes: v || null }, 'Notes saved')} />
-            </div>
           </div>
 
           <div className="card p-4 space-y-3 text-sm">
@@ -181,6 +181,8 @@ export default function LeadPage({ params }: { params: Promise<{ id: string }> }
               <input className="input" placeholder="Leave blank to use Settings" defaultValue={lead.call_phone ?? ''} onBlur={(e) => e.target.value !== (lead.call_phone ?? '') && patch({ call_phone: e.target.value || null })} />
             </div>
           </div>
+          <LeadFollowups lead={lead} />
+          <LeadHistory leadId={lead.id} refreshKey={lead.updated_at + (note ?? '')} />
         </aside>
       </div>
     </div>
@@ -195,16 +197,5 @@ function Toggle({ label, checked, onChange, disabled, danger }: { label: string;
       </button>
       <span>{label}</span>
     </label>
-  )
-}
-
-function NotesBox({ value, onSave }: { value: string; onSave: (v: string) => void }) {
-  const [v, setV] = useState(value)
-  useEffect(() => setV(value), [value])
-  return (
-    <div>
-      <AiTextArea value={v} onChange={setV} rows={4} placeholder="Call notes, what they want, best time to reach..." />
-      {v !== value && <button className="btn-primary mt-2 py-1.5" onClick={() => onSave(v)}>Save notes</button>}
-    </div>
   )
 }

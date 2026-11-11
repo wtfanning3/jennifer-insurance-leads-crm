@@ -25,7 +25,6 @@ export default function NewLeadPage() {
       ...lead,
       phone_e164: toE164(lead.phone),
       follow_up_date: followUp || null,
-      notes: notes || null,
       source: 'manual',
       welcome_sms_status: 'skipped',
     }
@@ -33,6 +32,10 @@ export default function NewLeadPage() {
     if (error || !data) {
       setBusy(false)
       return setError(error?.message ?? 'Could not save')
+    }
+    if (notes.trim()) {
+      const { data: u } = await supabase().auth.getUser()
+      await supabase().from('lead_notes').insert({ lead_id: data.id, body: notes.trim(), author: u.user?.email ?? null })
     }
     if (sendWelcome) {
       const res = await fetch(`/api/leads/${data.id}/text`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'welcome' }) })
@@ -61,7 +64,7 @@ export default function NewLeadPage() {
           <input type="date" className="input" value={followUp} onChange={(e) => setFollowUp(e.target.value)} />
         </div>
         <div className="sm:col-span-2">
-          <label className="label">Notes</label>
+          <label className="label">First note (optional)</label>
           <textarea className="input" rows={2} value={notes} onChange={(e) => setNotes(e.target.value)} />
         </div>
         <label className="sm:col-span-3 flex items-center gap-2 text-sm">

@@ -15,8 +15,12 @@ Commercial):
 - **Follow-up texts** go out automatically on the days you choose, until the
   lead replies.
 - **STOP / opt-out** is built in.
-- **Edit or delete leads**, set **follow-up dates**, keep notes, and get a
-  morning email of follow-ups due.
+- **Edit or delete leads**, set **follow-up dates**, keep dated **notes**, and
+  get a morning email of follow-ups due. Each lead shows its texts, notes,
+  follow-up text schedule and full history.
+- **Text Log**: every text sent and received, filterable and downloadable.
+- **Reports**: leads by day and type, reply, close and opt-out rates,
+  texting volume, follow-up performance, and a full activity log.
 - **Settings**: agency name, phone numbers, logos, lead email recipients,
   every text's wording (with **AI writing help**), the assistant's instructions,
   and texting hours.
@@ -42,6 +46,7 @@ npm run typecheck
 | Path | What |
 |---|---|
 | `supabase/migrations/0001_init.sql` | Tables, access rules, starter follow-ups, logo bucket |
+| `supabase/migrations/0002_notes_and_activity.sql` | Lead notes + activity log (database triggers) |
 | `lib/fields.ts` | Lead types and every field/section (drives forms, emails, AI context) |
 | `lib/parse-lead.ts` | Reads SmartFinancial leads (JSON, form, text or HTML email) |
 | `lib/ingest.ts` | Save/dedupe a lead → email → welcome text |

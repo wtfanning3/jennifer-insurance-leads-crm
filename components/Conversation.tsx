@@ -70,6 +70,10 @@ export default function Conversation({ lead, onChanged }: { lead: InsuranceLead;
     <div className="card flex flex-col">
       <div className="px-4 py-3 border-b border-line flex items-center">
         <h3 className="h2">Text messages</h3>
+        <span className="ml-3 text-xs text-muted">
+          {msgs.filter((m) => m.direction === 'out' && m.status !== 'failed').length} sent · {msgs.filter((m) => m.direction === 'in').length} received
+          {msgs.some((m) => m.status === 'failed') && <span className="text-crimson"> · {msgs.filter((m) => m.status === 'failed').length} failed</span>}
+        </span>
         <span className="ml-auto text-xs text-muted">{lead.phone_e164 ?? 'No textable number'}</span>
       </div>
       <div ref={box} className="flex-1 overflow-y-auto max-h-[520px] min-h-[200px] p-4 space-y-3 bg-canvas">

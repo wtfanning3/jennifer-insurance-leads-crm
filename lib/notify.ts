@@ -1,5 +1,6 @@
 import 'server-only'
 import { sendEmail, escapeHtml } from './email'
+import { logEvent } from './events'
 import { LEAD_TYPE_LABELS, leadName, leadSummaryLines, type InsuranceLead } from './fields'
 import { formatPhone } from './phone'
 import { appBaseUrl, logoUrl, notifyEmailList, type Settings } from './settings'
@@ -44,7 +45,13 @@ export async function emailNewLead(lead: InsuranceLead, s: Settings, textStatus:
     `<p style="margin:0 0 12px;color:#667085">Text message: ${escapeHtml(textStatus)}</p>${linesToHtml(lines)}`,
     { href: url, label: 'Open lead' }
   )
-  await sendEmail({ to, subject, text, html, replyTo: lead.email ?? undefined })
+  try {
+    await sendEmail({ to, subject, text, html, replyTo: lead.email ?? undefined })
+    await logEvent(lead, 'lead_emailed', { to })
+  } catch (err) {
+    await logEvent(lead, 'email_failed', { to, error: err instanceof Error ? err.message : String(err) })
+    throw err
+  }
 }
 
 export async function emailReply(lead: InsuranceLead, s: Settings, inbound: string, botNote: string | null, botReplied: string | null) {
@@ -64,7 +71,7 @@ export async function emailFollowUpDigest(leads: InsuranceLead[], s: Settings, t
   const to = notifyEmailList(s)
   if (!to.length || !leads.length) return
   const base = appBaseUrl()
-  const rows = leads.map((l) => `${l.follow_up_date && l.follow_up_date < today ? '(overdue) ' : ''}${leadName(l)} - ${LEAD_TYPE_LABELS[l.lead_type]}${l.phone ? `, ${formatPhone(l.phone)}` : ''}${l.notes ? ` - ${l.notes.split('\n')[0].slice(0, 80)}` : ''}\n${base}/leads/${l.id}`)
+  const rows = leads.map((l) => `${l.follow_up_date && l.follow_up_date < today ? '(overdue) ' : ''}${leadName(l)} - ${LEAD_TYPE_LABELS[l.lead_type]}${l.phone ? `, ${formatPhone(l.phone)}` : ''}${l.notes ? ` - Latest note: ${l.notes.split('\n')[0].slice(0, 80)}` : ''}\n${base}/leads/${l.id}`)
   const subject = `Follow-ups due today: ${leads.length}`
   const html = wrapHtml(
     s,

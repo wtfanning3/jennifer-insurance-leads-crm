@@ -34,7 +34,7 @@ export default function MessagesPage() {
 
   return (
     <div>
-      <h1 className="h1 mb-4">Text Messages</h1>
+      <div className="flex items-center gap-3 mb-4"><h1 className="h1">Conversations</h1><Link href="/texts" className="text-sm text-navy hover:underline">Text Log (every text) →</Link></div>
       {!rows ? <p className="text-muted">Loading...</p> : rows.length === 0 ? (
         <div className="card p-8 text-center text-muted">No texts yet. They show up here once leads start getting and answering texts.</div>
       ) : (

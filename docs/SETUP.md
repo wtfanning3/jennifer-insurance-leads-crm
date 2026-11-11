@@ -24,7 +24,9 @@ programming.
 2. Left menu → **SQL Editor** → **New query**. Open
    `supabase/migrations/0001_init.sql` from this repository, paste the whole
    file in and click **Run**. This creates the tables, the starter follow-up
-   texts, your agency settings and the logo storage.
+   texts, your agency settings and the logo storage. Then do the same with
+   `supabase/migrations/0002_notes_and_activity.sql` (notes on each lead, and
+   the activity tracking used by History and Reports).
 3. **Authentication → Providers → Email**: turn **off** "Allow new users to
    sign up" (only people you add can get in).
 4. **Authentication → Users → Add user**: add Jennifer's email and a
@@ -290,6 +292,20 @@ lead. It doesn't create a second one or text them again.
   or use ✨ AI help to draft one), every field from the lead (edit, then
   *Save changes*), status, follow-up date (+1d, +7d… buttons), notes, the
   assistant/follow-up switches, and **Delete lead**.
+- **Lead page, also**: **Notes**, a dated log (who wrote it and when; edit or
+  delete any note). **Follow-up texts** shows which went out, which are
+  planned and which won't send (and why). **History** lists everything that
+  happened to the lead.
+- **Conversations**: every lead you're texting with, unread first.
+- **Text Log**: every text sent and received. Filter by dates,
+  sent/received, kind (welcome, follow-up, assistant, staff), lead type, or
+  failed only; search; download as a spreadsheet.
+- **Reports**: pick the dates (today, 7/30/90 days, this or last month,
+  this year, all time, or custom). It shows leads received over time, by
+  type, and where they are now; reply rate, call-link taps, quoted/sold and
+  close rate per type; texts sent by kind; welcome-text speed; how each
+  follow-up text performs; opt-outs and hand-offs; where leads came from; and
+  a full activity log. Download the leads or the activity log as a spreadsheet.
 - **Settings**: agency name, phone numbers, logos (upload new ones any time),
   who gets lead emails, welcome and follow-up wording (with AI help on every
   box: *Tell AI* what you want, or *Improve / Shorter / Friendlier…*, or open
