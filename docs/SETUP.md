@@ -7,7 +7,7 @@ programming.
 | Step | What | Cost |
 |---|---|---|
 | 1 | Supabase (database + sign-in) | Free |
-| 2 | Vercel (runs the CRM) | Pro $20/mo (see note) |
+| 2 | Vercel (runs the CRM) | Free while testing; Pro $20/mo once it's in business use |
 | 3 | Resend (sends the lead emails) | Free up to 3,000 emails/mo |
 | 4 | Anthropic (AI assistant + AI writing help) | Pay per use, see below |
 | 5 | Texting: Twilio or Telnyx | See "Texting: which service and what it costs" |
@@ -59,14 +59,21 @@ programming.
    and fill in the agency info, the **office phone** (the "tap to call"
    link rings it), and the **Lead emails** addresses.
 
-> **Why Vercel Pro:** the follow-up texts and morning welcome texts run on a
-> schedule every 15 minutes (`vercel.json`). Vercel's free Hobby plan only runs
-> scheduled jobs once a day and is for non-commercial use. If you'd rather stay
-> on Hobby, change the schedule in `vercel.json` to once a day
-> (`0 15 * * *`), and use a free service such as
-> [cron-job.org](https://cron-job.org) to call
-> `https://<your CRM>/api/cron` every 15 minutes with the header
-> `Authorization: Bearer <your CRON_SECRET>`.
+> **The 15-minute job (follow-up texts, morning welcome texts).** The CRM
+> needs `https://<your CRM>/api/cron` called every 15 minutes. Vercel's free
+> Hobby plan only allows scheduled jobs **once a day** (and refuses to deploy
+> if `vercel.json` asks for more), so `vercel.json` is set to once a day
+> (about 7:30 AM Mountain). For the every-15-minutes part, either:
+> - **Free:** make a free account at [cron-job.org](https://cron-job.org) →
+>   *Create cronjob* → URL `https://<your CRM>/api/cron`, every 15 minutes →
+>   *Advanced → Headers*: add `Authorization` = `Bearer <your CRON_SECRET>`.
+>   This also keeps a free Supabase project from pausing.
+> - **On Vercel Pro:** change the schedule in `vercel.json` to `*/15 * * * *`
+>   and you don't need cron-job.org.
+>
+> Vercel's free plan is meant for personal, non-commercial use. It's fine
+> for setting up and testing; switch to Pro ($20/mo) when you start working
+> real leads with it.
 
 ## 3. Resend (sends the lead emails)
 

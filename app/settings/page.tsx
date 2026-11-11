@@ -480,7 +480,7 @@ function ConnectionsTab() {
             <Row ok={!!st.sms} label="Texting" detail={st.sms ? `${st.sms === 'twilio' ? 'Twilio' : 'Telnyx'}${st.smsFrom ? `, from ${st.smsFrom}` : ''}` : 'not set up (Twilio or Telnyx)'} />
             <Row ok={st.email} label="Email" detail={st.email ? `from ${st.emailFrom}` : 'RESEND_API_KEY / EMAIL_FROM not set'} />
             <Row ok={st.ai} label="AI (assistant + writing help)" detail={st.ai ? st.aiModel : 'ANTHROPIC_API_KEY not set'} />
-            <Row ok={st.cronSecretSet} label="Scheduled job (follow-ups, morning texts)" detail={st.cronSecretSet ? 'every 15 minutes' : 'CRON_SECRET not set'} />
+            <Row ok={st.cronSecretSet} label="Scheduled job (follow-ups, morning texts)" detail={st.cronSecretSet ? 'ready (runs every 15 minutes once cron-job.org or Vercel Pro is set up)' : 'CRON_SECRET not set'} />
           </div>
         )}
       </Section>

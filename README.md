@@ -55,4 +55,4 @@ npm run typecheck
 | `app/api/webhooks/smartfinancial` | Lead intake (secret key) |
 | `app/api/webhooks/sms` | Incoming texts (Twilio/Telnyx signature checked) |
 | `app/i/c/[code]`, `app/i/s/[code]` | Public tap-to-call and stop-texts pages |
-| `app/api/cron` | Runs every 15 minutes (`vercel.json`) |
+| `app/api/cron` | Scheduled job: daily via `vercel.json`, every 15 min via cron-job.org or Vercel Pro (see docs/SETUP.md) |
